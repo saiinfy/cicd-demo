@@ -14,6 +14,7 @@ jobs:
       actions: read
       contents: read
       issues: write                                  # ← fixes "Resource not accessible" error
+      security-events: write 
 
     steps:
       - name: Checkout Code
