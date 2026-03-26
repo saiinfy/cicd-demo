@@ -10,6 +10,10 @@ jobs:
     name: DAST Analysis (OWASP ZAP)
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      actions: read
+      contents: read
+      issues: write                                  # ← fixes "Resource not accessible" error
 
     steps:
       - name: Checkout Code
@@ -35,17 +39,16 @@ jobs:
         env:
           FLASK_ENV: testing
 
-      - name: Fix Permissions for ZAP                  # fixes PermissionError
-        run: |
-          chmod 777 ${{ github.workspace }}
+      - name: Fix Permissions for ZAP
+        run: chmod 777 ${{ github.workspace }}
 
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
           target: "http://127.0.0.1:5000"
-          fail_action: false                            # won't fail pipeline on warnings
+          fail_action: false
+          issue_title: "ZAP DAST Scan Report"        # ← creates GitHub issue with results
           artifact_name: zap-scan-report
-          # removed rules_file_name — was causing rules file error
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
