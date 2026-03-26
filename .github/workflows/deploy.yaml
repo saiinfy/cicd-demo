@@ -1,12 +1,12 @@
 name: Flask CI/CD Pipeline
 on:
   workflow_run:
-    workflows: ["CodeQL Advanced"]   # must match name: in codeql.yaml exactly
+    workflows: ["CodeQL Advanced"]
     types:
-      - completed 
+      - completed
 
-jobs:    
-   dast:
+jobs:
+  dast:
     name: DAST Analysis (OWASP ZAP)
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -31,28 +31,35 @@ jobs:
         run: |
           source venv/bin/activate
           nohup python app.py &
-          sleep 5                                    # wait for app to start
+          sleep 5
         env:
           FLASK_ENV: testing
+
+      - name: Fix Permissions for ZAP                  # fixes PermissionError
+        run: |
+          chmod 777 ${{ github.workspace }}
 
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
-          target: "http://127.0.0.1:5000"           # your flask app URL
-          rules_file_name: '.zap/rules.tsv'         # optional: suppress false positives
-          cmd_options: '-a'                          # include ajax spider
-          fail_action: false                         # pipeline won't fail on warnings
-          artifact_name: zap-scan-report            # report saved as artifact
+          target: "http://127.0.0.1:5000"
+          fail_action: false                            # won't fail pipeline on warnings
+          artifact_name: zap-scan-report
+          # removed rules_file_name — was causing rules file error
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
-        if: always()                                 # upload even if scan finds issues
+        if: always()
         with:
           name: zap-scan-report
           path: report_html.html
-   deploy:
+
+  deploy:
+    name: Deploy Flask App
     runs-on: self-hosted
+    needs: dast
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
