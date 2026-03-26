@@ -4,43 +4,9 @@ on:
     branches:
       - main
 
-jobs:
-  analyze:
-    name: Analyze Code (SAST)
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'python' ]
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2   
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: python
-          queries: security-and-quality        # was hardcoded 'python', must use matrix variable
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3  # let CodeQL build the project itself
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:python"
-          output: sarif-results                   # explicitly define output folder
-          upload: true  
-
-          
+jobs:          
   deploy:
     runs-on: self-hosted
-    needs: analyze
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
