@@ -48,13 +48,13 @@ jobs:
           target: "http://127.0.0.1:5000"
           fail_action: false
           issue_title: "ZAP DAST Scan Report"        # ← creates GitHub issue with results
-          artifact_name: zap-scan-report
+          artifact_name: zap-results
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: zap-scan-report
+          name: zap-html-report
           path: report_html.html
 
   deploy:
