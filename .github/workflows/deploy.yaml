@@ -27,4 +27,4 @@ jobs:
       - name: Run Flask App
         run: |
           source venv/bin/activate
-          nohup python app.py > app.log 2>&1 &
+          setsid nohup python app.py > app.log 2>&1 < /dev/null &
