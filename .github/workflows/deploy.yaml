@@ -27,13 +27,11 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+         languages: python
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+      
       - name: Fail if issues found
         run: exit 1
 
