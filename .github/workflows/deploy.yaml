@@ -62,7 +62,7 @@ jobs:
     name: Deploy Flask App
     runs-on: self-hosted
     needs: dast
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ always() }}
 
     steps:
       - name: Checkout Code
