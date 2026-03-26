@@ -1,7 +1,7 @@
 name: Flask CI/CD Pipeline
 on:
   workflow_run:
-    workflows: ["CodeQL Analysis"]   # must match name: in codeql.yaml exactly
+    workflows: ["CodeQL Advanced"]   # must match name: in codeql.yaml exactly
     types:
       - completed 
 
