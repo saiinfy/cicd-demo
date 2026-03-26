@@ -28,9 +28,8 @@ jobs:
           languages: python
           queries: security-and-quality        # was hardcoded 'python', must use matrix variable
 
-       - name: Autobuild
+      - name: Autobuild
         uses: github/codeql-action/autobuild@v3  # let CodeQL build the project itself
-
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
