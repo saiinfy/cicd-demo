@@ -13,9 +13,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Debug User
-        run: whoami
-
       - name: Setup Virtual Environment
         run: |
           python3 -m venv venv
@@ -30,4 +27,4 @@ jobs:
       - name: Run Flask App
         run: |
           source venv/bin/activate
-          python app.py
+          nohup python app.py > app.log 2>&1 &
