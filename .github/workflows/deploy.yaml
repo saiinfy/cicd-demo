@@ -22,15 +22,9 @@ jobs:
 
       - name: Stop Existing App
         run: |
-          if [ -f flask.pid ]; then
-            kill $(cat flask.pid) || true
-            rm flask.pid
-          fi
+          screen -S flask-app -X quit || true
           sleep 2
 
       - name: Run Flask App
         run: |
-          source venv/bin/activate
-          nohup python app.py > app.log 2>&1 &
-          echo $! > flask.pid
-          disown -a
+          screen -dmS flask-app bash -c 'source venv/bin/activate && python app.py > app.log 2>&1'
