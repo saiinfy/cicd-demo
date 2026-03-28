@@ -100,8 +100,8 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"
 
-    - name: Upload SARIF file
-      uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v4
       with:
         name: codeql-results
-        path: /home/runner/work/_temp/codeql_databases/**/*.sarif
+        path: results.sarif
+        retention-days: 30
